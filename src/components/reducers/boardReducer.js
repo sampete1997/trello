@@ -1,4 +1,4 @@
-import { getBoardData, getBoardId,getBoardName, getBoardListData, isCreate } from "../actions/boardAction"
+import { getBoardData, getBoardId,getBoardName, getBoardListData, isCreate, UpdateRedux } from "../actions/boardAction"
 
 const initialState = {
     boardData: [],
@@ -43,11 +43,11 @@ function boardReducer(state = initialState, action) {
                 boardName: action.payload
             }
 
-        case 'updateRedux':
-            return {
-                ...state,
-                updateRedux: state.updateRedux + 1
-            }
+            case 'updateRedux':
+                return {
+                    ...state,
+                    updateRedux:state.updateRedux+1
+                }
 
         default:
             return state

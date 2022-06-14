@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import './style.css'
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getBoardData, getBoardName,getBoardId, isCreate } from "../actions/boardAction";
-import { fetchBoardData,createBoard } from "../urls/FetchApi";
+import { getBoardData, getBoardName, getBoardId, isCreate, UpdateRedux } from "../actions/boardAction";
+import { fetchBoardData, createBoard } from "../urls/FetchApi";
 import axios from "axios";
 import { Button, Card, Input, Modal } from "antd";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -15,18 +15,22 @@ export default function Board() {
     const dispatch = useDispatch()
     const boardData = useSelector((state) => state.board.boardData)
     const boardId = useSelector((state) => state.board.boardId)
-    const boardName= useSelector((state) => state.board.boardName)
-    const navigate = useNavigate();
-    function boardCreate(){
+    const boardName = useSelector((state) => state.board.boardName)
+    const updateRedux = useSelector((state) => state.board.updateRedux)
+    // const navigate = useNavigate();
+    function boardCreate() {
 
         createBoard(boardName)
-        .then(res=>res)
-        .then(()=>{
+            .then(res => dispatch({ type: UpdateRedux })
+            )
+            .then(() => {
 
-            navigate('/')
+                alert('created new board ' + boardName)
+                dispatch({ type: UpdateRedux})
 
-        })
-        .catch(er=>console.log('err',er))
+            })
+            .catch(er => console.log('err', er))
+
 
     }
 
@@ -40,9 +44,10 @@ export default function Board() {
 
             })
             .catch((e) => console.log('err', e))
-    }, [])
 
-    console.log('boarddta', boardData);
+    }, [updateRedux])
+
+    console.log('boarddta', updateRedux, boardData,);
     return (
 
         <div className="board">
@@ -68,8 +73,8 @@ export default function Board() {
 
             <Card className="newBoard">
 
-                <input type={'text'} className='inputName' placeholder='Name of board' onChange={(e) => dispatch({ type:getBoardName, payload: e.target.value })}></input>
-                <button onClick={() =>boardCreate()}>create new board</button>
+                <input type={'text'} className='inputName' placeholder='Name of board' onChange={(e) => dispatch({ type: getBoardName, payload: e.target.value })}></input>
+                <button onClick={() => boardCreate()}>create new board</button>
             </Card>
 
         </div>
