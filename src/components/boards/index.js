@@ -2,11 +2,10 @@ import React, { useEffect, useState } from "react";
 import './style.css'
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getBoardData, getBoardName, getBoardId, isCreate, UpdateRedux } from "../actions/boardAction";
+import { getBoardData, getBoardName, getBoardId, isCreate, UpdateRedux } from "../actions/Actions";
 import { fetchBoardData, createBoard } from "../urls/FetchApi";
 import axios from "axios";
-import { Button, Card, Input, Modal } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Button, div, Input, Modal } from "antd";
 
 
 
@@ -26,11 +25,11 @@ export default function Board() {
             .then(() => {
 
                 alert('created new board ' + boardName)
-                dispatch({ type: UpdateRedux})
+                dispatch({ type: UpdateRedux })
+                dispatch({ type: getBoardName, payload: '' })
 
             })
             .catch(er => console.log('err', er))
-
 
     }
 
@@ -47,7 +46,7 @@ export default function Board() {
 
     }, [updateRedux])
 
-    console.log('boarddta', updateRedux, boardData,);
+    console.log('boarddta', updateRedux, boardData);
     return (
 
         <div className="board">
@@ -58,24 +57,26 @@ export default function Board() {
             {boardData.map((currBoard) => {
 
                 return (
-                    <Link key={currBoard.id} to={'/board'} onClick={() => {
+                    <Link className="links" key={currBoard.id} to={'/board'} onClick={() => {
                         dispatch({ type: getBoardId, payload: currBoard.id })
+                        localStorage.setItem('boardId',currBoard.id)
 
-                    }}>< Card title={currBoard.name} key={currBoard.id} className="BoardContainer">
-
-                        </Card>
+                    }}>< div key={currBoard.id} className="BoardContainer">
+                        <h4>{currBoard.name}</h4>
+                        </div>
                     </Link>
-
-
                 )
             })
             }
 
-            <Card className="newBoard">
+            <div className="newBoard">
 
                 <input type={'text'} className='inputName' placeholder='Name of board' onChange={(e) => dispatch({ type: getBoardName, payload: e.target.value })}></input>
-                <button onClick={() => boardCreate()}>create new board</button>
-            </Card>
+                <button onClick={() => boardData.length <= 10 && boardName !== '' ? boardCreate() : alert('You have excceded limit of boards')}>create new board</button>
+                <p>remaining boards {10 - boardData.length}</p>
+
+            </div>
+
 
         </div>
     )

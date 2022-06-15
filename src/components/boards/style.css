@@ -2,11 +2,15 @@
     margin: 2rem 0rem 2rem 2rem;
     background-image: url('https://images5.alphacoders.com/325/325015.jpg');
     background-size: cover;
-    width: 12rem;
+    width: 14rem;
     height: 10rem;
     color: wheat;
     padding-left: 0.5rem;
    
+}
+
+.BoardContainer h4{
+    color: white;
 }
 
 .board {
@@ -30,8 +34,6 @@
     box-shadow: 1px 1px 3px 2px;
     flex-direction: column;
    
-
-    
 }
 
 .inputName{
@@ -47,5 +49,15 @@
     margin: 1rem;
     color: white;
     font-size: 1rem;
-    padding: 0.2rem;
+    padding: 0.3rem;
+    border-radius: 1rem;
+}
+
+.newBoard p {
+    margin: 1rem;
+}
+
+.links{
+    text-decoration: none;
+    color: white;
 }
