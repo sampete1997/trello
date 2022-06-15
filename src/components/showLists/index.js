@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import './style.css'
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getBoardListData, getListName, UpdateRedux } from "../actions/Actions";
-import { createBoard, fetchListData, createList } from "../urls/FetchApi";
+import { getBoardListData, getListName, UpdateRedux, getListId } from "../actions/Actions";
+import { createBoard, fetchListData, createList, deleteList } from "../urls/FetchApi";
 import { Card, Input, Modal } from "antd";
 import "antd/dist/antd.css";
 
@@ -14,23 +14,37 @@ export default function ShowList() {
     const dispatch = useDispatch()
     const boardId = localStorage.getItem('boardId')
     const listName = useSelector((state) => state.list.listName)
+    const listId = useSelector((state) => state.list.listId)
+
     const updateRedux = useSelector((state) => state.board.updateRedux)
 
     const boardListData = useSelector((state) => state.board.boardListData)
     const [popup, SetPopup] = useState(false)
 
-
+console.log('redux state',updateRedux);
     function createNewList() {
 
-        console.log('listname',listName);
+        console.log('listname', listName);
 
         createList(boardId, listName)
-            .then((res) =>res)
-            .then(()=>dispatch({ type: UpdateRedux}))
-            .catch(err=>console.log('err:',err))
+            .then((res) => res)
+            .then(() => dispatch({ type: UpdateRedux }))
+            .catch(err => console.log('err:', err))
 
         SetPopup(false)
     }
+
+
+    function deleteOldList() {
+
+        console.log('listid', listId);
+
+        deleteList(listId)
+            .then((res) => res)
+            .then(() => dispatch({ type: UpdateRedux }))
+            .catch(err => console.log('err:', err))
+    }
+
 
     function cancel() {
         return SetPopup(false)
@@ -48,25 +62,40 @@ export default function ShowList() {
             .then((fetchedData) => {
 
                 dispatch({ type: getBoardListData, payload: fetchedData })
-                console.log('getBoardListData', fetchListData);
-                console.log('id', boardId);
+                // console.log('getBoardListData', fetchListData);
+                // console.log('id', boardId);
 
             })
             .catch((e) => console.log('err', e))
     }, [updateRedux])
 
+
+    
+
     console.log('boardlisttdta', boardListData);
     return (
         <div className="board">
-            {boardListData.map((currBoard) => {
+            {boardListData.map((currList) => {
 
                 return (
-                    <Link key={currBoard.id} to={'/card'} onClick={() => {
-
-                    }}>< div key={currBoard.id} className="ListContainer" >
-                            <p>{currBoard.name}</p>
+                    < div key={currList.id} className="ListContainer" >
+                        <div className="listnamediv"><p>{currList.name}</p>
+                            <button onClick={() => {
+                                dispatch({ type: getListId, payload: currList.id })
+                                // while (true) {
+                                    if (listId != '') {
+                                        // alert('you will delete ' + currList.name)
+                                        
+                                        deleteOldList()
+                                        // break
+                                    }
+                                // }
+                            }}>❌</button>
                         </div>
-                    </Link>
+
+
+                    </div>
+
                 )
             })
 
@@ -74,8 +103,8 @@ export default function ShowList() {
             }
 
             <Modal title={'Add name of list'} visible={popup} onOk={() => createNewList()} onCancel={() => cancel()}>
-                Name Of List
-                <Input placeholder="Name Of List" onChange={(e) =>
+
+                <Input placeholder="&nbsp;Name Of List" onChange={(e) =>
                     dispatch({ type: getListName, payload: e.target.value })}>
                 </Input>
             </Modal>

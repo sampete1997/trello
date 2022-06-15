@@ -1,9 +1,10 @@
-import { getListName} from "../actions/Actions"
+import { getListName ,getListId} from "../actions/Actions"
 
 const initialState = {
 
     listName: '',
- 
+    listId:''
+
 }
 
 function listReducer(state = initialState, action) {
@@ -18,7 +19,15 @@ function listReducer(state = initialState, action) {
 
                 listName: action.payload
             }
-   
+
+        case getListId:
+
+            return {
+                ...state,
+
+                listId: action.payload
+            }
+
 
         default:
             return state

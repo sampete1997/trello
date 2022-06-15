@@ -6,5 +6,6 @@ module.exports = {
     isCreate:'isCreate',
     getBoardName:'getBoardName',
     UpdateRedux:'updateRedux',
-    getListName:'getListName'
+    getListName:'getListName',
+    getListId:'getListId'
 }
